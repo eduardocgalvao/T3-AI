@@ -13,7 +13,7 @@ Tabuleiro(char tab[9])
 
     return 0;
 }
-
+// Considera somente o primeiro caracter inserido 
 char caracter()
 {
     char ch = getchar();
@@ -36,5 +36,35 @@ char caracter()
 
     return ch;
 
+
 }
+//Calcula os espaços vazios (Serve para verificação da IA para previsão de jogadas)
+void espacos_vazios(char tab[9], int indexes[9])
+{
+    int count = 0;
+    for (int i = 0; i < 9; i++)
+    {
+        if(tab[i] = ' ')
+        {
+            indexes[count] = i;
+            count++;
+        }
+    }
+}
+
+char troca_jogador(char player)
+{
+    if(player == 'X')
+    {
+        return 'O';
+    }
+    else
+    {
+        return 'X';
+    }
+}
+
+
+
+
 
