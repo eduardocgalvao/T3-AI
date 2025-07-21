@@ -6,6 +6,7 @@
 #include <string.h>
 #include <ctype.h>
 
+Tabuleiro(char tab[9]);
 
 
 #endif
