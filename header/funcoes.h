@@ -16,6 +16,8 @@ void espacos_vazios(char tab[9], int indexes[9]);
 char caracter();
 //Troca de jogador
 char troca_jogador(char player);
+// Verificação espaços preenchidos e coordenada dentro do tabuleiro (Modo 1v1)
+void VerificarCoord(char tab[9], char* coordenada, char player);
 
 
 
