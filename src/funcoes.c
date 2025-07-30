@@ -37,7 +37,7 @@ char caracter()
 
 }
 //Calcula os espaços vazios (Serve para verificação da IA para previsão de jogadas)
-void espacos_vazios(char tab[9], int indexes[9])
+void calcular_espacos_vazios(char tab[9], int indexes[9])
 {
     int count = 0;
     for (int i = 0; i < 9; i++)
@@ -86,16 +86,136 @@ void VerificarCoord(char tab[9], char* coordenada, char player)
         }
     }
 
-    int checkWinner(char tab[9], char player)
+}
+
+int ChecarGanhador(char tab[9], char player)
+{
+    if((tab[0] == player && tab[4] == player && tab[8] == player)  || 
+       (tab[2] == player && tab[4] == player && tab[6] == player ) ||
+       (tab[0] == player && tab[1] == player && tab[2] == player ) ||
+       (tab[3] == player && tab[4] == player && tab[5] == player ) ||
+       (tab[6] == player && tab[7] == player && tab[8] == player)  ||
+       (tab[0] == player && tab[3] == player && tab[6] == player)  ||
+       (tab[1] == player && tab[4] == player && tab[7] == player)  ||
+       (tab[2] == player && tab[5] == player && tab[8] == player)   )
     {
-        if((tab[0] == player && tab[4] == player && tab[8] == player) || 
-           (tab[2] == player && tab[4] == player && tab[6] == player ) ||
-           (tab[0] == player && tab[1] == player && tab[2] == player ) ||
-          (tab[3] == player && tab[4] == player && tab[5] == player ) ||
-          ())
+        return 1;
+    }
+    return 0;
+}
+
+int IA_normal(char tab[9], char player, int espacos_vazios )
+{
+    int indexes[9];
+    calcular_espacos_vazios(tab, indexes);
+    tab[indexes[random(espacos_vazios)]] == player;
+
+    return 0;
+}
+
+int IA_minimax(char tab[9], int espacos_vazios, char player, compare cmp )
+{
+    int indexes[9];
+    calcular_espacos_vazios(tab, indexes);
+
+    if(cmp == min)
+    {
+        int score = 1000;
+        int thisScore;
+
+        for(int i = 0; i < espacos_vazios; i++)
+        {
+            tab[indexes[i]] = player;
+
+            if(ChecarGanhador(player, tab) == 1)
+            {
+                thisScore = espacos_vazios * cmp;
+            }
+            else if(espacos_vazios-1 == 0)
+            {
+                thisScore = 0;
+            }
+            else
+            {
+                thisScore = IA_minimax(tab, espacos_vazios-1, troca_jogador(player), -cmp);
+            }
+
+            if (thisScore < score)
+            {
+                score = thisScore;
+            }
+
+            tab[indexes[i]] = ' ';
+        }
+        return score;
+    }
+    else
+    {
+        int score = -1000;
+        int thisScore;
+
+        for(int i = 0; i < espacos_vazios; i++)
+        {
+            if(ChecarGanhador(player, tab) == 1)
+            {
+                thisScore = espacos_vazios * cmp;
+            }
+            else if(espacos_vazios-1 == 0)
+            {
+                thisScore = 0;
+            }
+            else
+            {
+                IA_minimax(tab[9], espacos_vazios-1, troca_jogador(player), -cmp);
+            }
+            
+            if(thisScore > score)
+            {
+                score = thisScore;
+            }
+
+            tab[indexes[i]] = ' ';
+        }
+        return score;
+    }
+}
+
+int IA_minimax_dificil(char tab[9], char player, int espacos_vazios)
+{
+    int score = -1000;
+    int thisScore;
+
+    int indexes[9];
+    calcular_espacos_vazios(tab, indexes);
+    int move = -1;
+
+    for(int i = 0; i < espacos_vazios; i++)
+    {
+        if(ChecarGanhador(tab, player) == 1)
+        {
+            thisScore = espacos_vazios;
+        }
+        else if(espacos_vazios-1 == 0)
+        {
+            thisScore = 0;
+        }
+        else
+        {
+            thisScore = IA_minimax(tab, troca_jogador(player),  espacos_vazios, min);
+        }
+
+        if(thisScore > score)
+        {
+            score = thisScore;
+            move = i;
+        }
+
+        tab[indexes[i]] = ' ';
     }
 
-    
+    tab[indexes[move]] = player;
+    return 0;
+
 
 }
 
