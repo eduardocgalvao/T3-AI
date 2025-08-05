@@ -5,17 +5,17 @@
 
 #include "header/funcoes.h"
 
-// Prototipacao das funcoes auxiliares
+// Prototipação das funções auxiliares
 char MostrarMenu();
 char EscolherJogador();
 int  QuerJogarNovamente();
 void JogarPartida(char modo, char humano);
-
+void LimparTabuleiro(char tab[9]);
 // Menu principal: exibe opcoes e retorna a escolha do jogador
 char MostrarMenu() {
     char opcao;
 
-    printf("X & O ~ C EDITION\n");
+    printf("T3-AI EDITION\n");
     printf("=================\n");
 
     while (1) {
@@ -26,7 +26,7 @@ char MostrarMenu() {
         printf("  0. Dois jogadores\n");
         printf("Digite 0, 1, 2 ou 3: ");
 
-        opcao = lerCaractere();
+        opcao = caracter();
         if (opcao == 0) exit(1); // Fim de entrada
 
         if (opcao == '0' || opcao == '1' || opcao == '2' || opcao == '3') {
@@ -36,7 +36,6 @@ char MostrarMenu() {
         printf("Opção inválida. Tente novamente.\n");
     }
 }
-
 // Permite o jogador escolher quem joga primeiro
 char EscolherJogador() {
     char option;
@@ -48,7 +47,7 @@ char EscolherJogador() {
     printf("Escolha 1, 2 ou 3: ");
 
     while (1) {
-        option = lerCaractere();
+        option = caracter();
         if (option == 0) exit(1);
 
         switch (option) {
@@ -60,14 +59,13 @@ char EscolherJogador() {
         printf("Opção inválida. Escolha 1, 2 ou 3: ");
     }
 }
-
 // Pergunta se o jogador deseja jogar novamente
 int QuerJogarNovamente() {
     char replay;
 
     while (1) {
         printf("Deseja jogar novamente? [Y/N]: ");
-        replay = lerCaractere();
+        replay = caracter();
         if (replay == 0) exit(1);
 
         if (toupper(replay) == 'Y') return 1;
@@ -77,54 +75,58 @@ int QuerJogarNovamente() {
     }
 }
 
+void LimparTabuleiro(char tab[9]) {
+    for (int i = 0; i < 9; i++) tab[i] = ' '; 
+}
 // Executa um turno para o jogador humano
 int turnoJogadorHumano(char grade[9], char TurnoJogador) {
     char coordenadas[4];
     printf("Turno do jogador %c\n", TurnoJogador);
     printf("Digite uma coordenada (ex: 2B): ");
-    if (lerEntrada(coordenadas, 4) == NULL) exit(1);
-    return posicionarJogada(TurnoJogador, grade, coordenadas);
-}
 
+    if (fgets(coordenadas, sizeof(coordenadas), stdin) == NULL)
+        return -1;
+
+    coordenadas[strcspn(coordenadas, "\n")] = 0;
+    return VerificarCoord(grade, coordenadas, TurnoJogador);
+}
 // Executa um turno para a IA
 int turnoIA(char grade[9], char TurnoJogador, char modo, int EmBranco) {
     printf("IA está jogando...\n");
     if (modo == '1') {
-        return normalAI(grade, TurnoJogador, EmBranco);
+        return IA_normal(grade, TurnoJogador, EmBranco);
     } else {
-        return impossivelAI(grade, TurnoJogador, EmBranco);
+        return IA_minimax_dificil(grade, TurnoJogador, EmBranco);
     }
 }
-
 // Verifica se houve vencedor ou empate
 int verificarFimDeJogo(char grade[9], int EmBranco) {
-    if (ChecarGanhador('X', grade)) {
-        MostrarTabuleiro(grade);
+    if (ChecarGanhador(grade, 'X')) {
+        Tabuleiro(grade);
         printf("Jogador X venceu!\n");
         return 1;
-    } else if (ChecarGanhador('O', grade)) {
-        MostrarTabuleiro(grade);
+    } else if (ChecarGanhador(grade, 'O')) {
+        Tabuleiro(grade);
         printf("Jogador O venceu!\n");
         return 1;
     } else if (EmBranco == 0) {
-        MostrarTabuleiro(grade);
+        Tabuleiro(grade);
         printf("Empate!\n");
         return 1;
     }
     return 0;
 }
-
 // Controla a execucao de uma partida
 void JogarPartida(char modo, char humano) {
     char tabuleiro[9];
-    LimparTabuleiro(tabuleiro); // Inicializa o tabuleiro com espacos vazios
+    LimparTabuleiro(tabuleiro);   // Inicializa o tabuleiro com espacos vazios
 
     char TurnoJogador = 'X';
-    int  EmBranco = 9; // Contador de espacos vazios
+    int  EmBranco = 9;   // Contador de espacos vazios
     int  FimDeJogo = 0;
 
     while (!FimDeJogo) {
-        MostrarTabuleiro(tabuleiro);
+        Tabuleiro(tabuleiro);
 
         int error;
         if (modo == '0' || humano == TurnoJogador) {
@@ -134,7 +136,7 @@ void JogarPartida(char modo, char humano) {
         }
 
         if (error != -1) {
-            TurnoJogador = alternarJogador(TurnoJogador);
+            TurnoJogador = troca_jogador(TurnoJogador);
             EmBranco--;
             printf("\n");
         }
@@ -147,19 +149,18 @@ int main(void) {
     srand(time(0));  // Inicializa o gerador de números aleatórios (para IA aleatória)
 
     while (1) {
-        char modo = MostrarMenu();  // Menu principal
+        char modo = MostrarMenu();    // Menu principal
         if (modo == '3') {
             printf("Saindo...\n");
             break;
         }
-
         // Define quem é o jogador humano (se modo não for 2 jogadores)
         char humano = 'X';
         if (modo == '1' || modo == '2') {
             humano = EscolherJogador();
         }
 
-        JogarPartida(modo, humano);  // Executa a partida
+        JogarPartida(modo, humano);   // Executa a partida
 
         if (!QuerJogarNovamente()) {
             printf("Saindo...\n");
