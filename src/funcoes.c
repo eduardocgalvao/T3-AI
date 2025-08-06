@@ -62,7 +62,7 @@ char troca_jogador(char player)
     }
 }
 // Verifica se a coordenada é válida e se espaço já está preenchido (modo 1v1)
-void VerificarCoord(char tab[9], char* coordenada, char player)
+int VerificarCoord(char tab[9], char* coordenada, char player)
 {
     int x, y;
     y--;
@@ -85,9 +85,10 @@ void VerificarCoord(char tab[9], char* coordenada, char player)
             tab[x * 3 + y] = player;
         }
     }
+    return 0;
 
 }
-
+// Checa quem ganhou o jogo da velha
 int ChecarGanhador(char tab[9], char player)
 {
     if((tab[0] == player && tab[4] == player && tab[8] == player)  || 
@@ -103,7 +104,7 @@ int ChecarGanhador(char tab[9], char player)
     }
     return 0;
 }
-
+// IA de modo "normal". Apenas escolhe um espaço aleatório vazio 
 int IA_normal(char tab[9], char player, int espacos_vazios )
 {
     int indexes[9];
@@ -112,7 +113,7 @@ int IA_normal(char tab[9], char player, int espacos_vazios )
 
     return 0;
 }
-
+// Função que monta a lógica do minimax: Simula as jogadas e avalia a melhor jogada
 int IA_minimax(char tab[9], int espacos_vazios, char player, compare cmp )
 {
     int indexes[9];
@@ -179,7 +180,7 @@ int IA_minimax(char tab[9], int espacos_vazios, char player, compare cmp )
         return score;
     }
 }
-
+// Função onde a IA é aplicada no jogo
 int IA_minimax_dificil(char tab[9], char player, int espacos_vazios)
 {
     int score = -1000;

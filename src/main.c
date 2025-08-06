@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <time.h>
 
-#include "header/funcoes.h"
+#include "../header/funcoes.h"
 
 // Prototipação das funções auxiliares
 char MostrarMenu();
