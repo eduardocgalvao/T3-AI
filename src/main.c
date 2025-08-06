@@ -9,6 +9,9 @@
 char MostrarMenu();
 char EscolherJogador();
 int  QuerJogarNovamente();
+int turnoJogadorHumano(char grade[9], char TurnoJogador);
+int turnoIA(char grade[9], char TurnoJogador, char modo, int EmBranco);
+int verificarFimDeJogo(char grade[9], int EmBranco);
 void JogarPartida(char modo, char humano);
 void LimparTabuleiro(char tab[9]);
 // Menu principal: exibe opcoes e retorna a escolha do jogador
@@ -20,10 +23,10 @@ char MostrarMenu() {
 
     while (1) {
         printf("\nSelecione o modo de jogo:\n");
+        printf("  0. Dois jogadores\n");
         printf("  1. Um jogador - IA Normal\n");
         printf("  2. Um jogador - IA Impossível\n");
         printf("  3. Sair\n");
-        printf("  0. Dois jogadores\n");
         printf("Digite 0, 1, 2 ou 3: ");
 
         opcao = caracter();
@@ -154,7 +157,7 @@ int main(void) {
             printf("Saindo...\n");
             break;
         }
-        // Define quem é o jogador humano (se modo não for 2 jogadores)
+        // Define quem é o jogador humano se o modo for contra a IA
         char humano = 'X';
         if (modo == '1' || modo == '2') {
             humano = EscolherJogador();
