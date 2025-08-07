@@ -1,7 +1,7 @@
 #include "../header/funcoes.h"
 
 // Monta o tabuleiro do jogo da velha
-Tabuleiro(char tab[9])
+int Tabuleiro(char tab[9])
 {
      printf("   A   B   C\n");
     printf("1  %c | %c | %c  \n", tab[0], tab[1], tab[2]);
@@ -24,7 +24,7 @@ char caracter()
         while(1)
         {
             char c;
-            c == getchar();
+            c = getchar();
             if(c == '\n')
             {
                 break;
@@ -42,7 +42,7 @@ void calcular_espacos_vazios(char tab[9], int indexes[9])
     int count = 0;
     for (int i = 0; i < 9; i++)
     {
-        if(tab[i] = ' ')
+        if(tab[i] == ' ')
         {
             indexes[count] = i;
             count++;
@@ -63,12 +63,14 @@ char troca_jogador(char player)
 }
 // Verifica se a coordenada é válida e se espaço já está preenchido (modo 1v1)
 int VerificarCoord(char tab[9], char* coordenada, char player)
-{
-    int x, y;
-    y--;
-    x = toupper(x) - 65;
+{   
+    char x;
+    int y;
+    
 
     sscanf(coordenada, " %c%d", &x, &y);
+    y--;
+    x = toupper(x) - 65;
 
     if((x < 0 || x > 2) || (y < 0 || y > 2))
     {
@@ -76,13 +78,13 @@ int VerificarCoord(char tab[9], char* coordenada, char player)
     }
     else 
     {
-        if(tab[x * 3 + y] != ' ')
+        if(tab[y * 3 + x] != ' ')
         {
             printf("Esse espaço já está preenchido no tabuleiro\n");
         }
         else
         {
-            tab[x * 3 + y] = player;
+            tab[y * 3 + x] = player;
         }
     }
     return 0;
@@ -109,7 +111,7 @@ int IA_normal(char tab[9], char player, int espacos_vazios )
 {
     int indexes[9];
     calcular_espacos_vazios(tab, indexes);
-    tab[indexes[random(espacos_vazios)]] == player;
+    tab[indexes[random(espacos_vazios)]] = player;
 
     return 0;
 }
@@ -121,6 +123,7 @@ int IA_minimax(char tab[9], int espacos_vazios, char player, compare cmp )
 
     if(cmp == min)
     {
+        
         int score = 1000;
         int thisScore;
 
@@ -128,7 +131,7 @@ int IA_minimax(char tab[9], int espacos_vazios, char player, compare cmp )
         {
             tab[indexes[i]] = player;
 
-            if(ChecarGanhador(player, tab) == 1)
+            if(ChecarGanhador(tab, player) == 1)
             {
                 thisScore = espacos_vazios * cmp;
             }
@@ -157,7 +160,9 @@ int IA_minimax(char tab[9], int espacos_vazios, char player, compare cmp )
 
         for(int i = 0; i < espacos_vazios; i++)
         {
-            if(ChecarGanhador(player, tab) == 1)
+            tab[indexes[i]] = player;
+             
+            if(ChecarGanhador(tab, player) == 1)
             {
                 thisScore = espacos_vazios * cmp;
             }
@@ -167,7 +172,7 @@ int IA_minimax(char tab[9], int espacos_vazios, char player, compare cmp )
             }
             else
             {
-                IA_minimax(tab[9], espacos_vazios-1, troca_jogador(player), -cmp);
+                thisScore = IA_minimax(tab, espacos_vazios-1, troca_jogador(player), -cmp);
             }
             
             if(thisScore > score)
@@ -192,6 +197,8 @@ int IA_minimax_dificil(char tab[9], char player, int espacos_vazios)
 
     for(int i = 0; i < espacos_vazios; i++)
     {
+         tab[indexes[i]] = player;
+
         if(ChecarGanhador(tab, player) == 1)
         {
             thisScore = espacos_vazios;
@@ -202,7 +209,8 @@ int IA_minimax_dificil(char tab[9], char player, int espacos_vazios)
         }
         else
         {
-            thisScore = IA_minimax(tab, troca_jogador(player),  espacos_vazios, min);
+            thisScore = IA_minimax(tab, espacos_vazios - 1, troca_jogador(player), min);
+
         }
 
         if(thisScore > score)
@@ -214,7 +222,10 @@ int IA_minimax_dificil(char tab[9], char player, int espacos_vazios)
         tab[indexes[i]] = ' ';
     }
 
-    tab[indexes[move]] = player;
+    if(move != -1){
+        tab[indexes[move]] = player;
+    }
+    
     return 0;
 
 

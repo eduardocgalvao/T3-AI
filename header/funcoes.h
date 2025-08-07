@@ -28,7 +28,7 @@ int IA_normal(char tab[9], char player, int espacos_vazios );
 // IA minimax que simula e analisa jogadas para a IA
 int IA_minimax(char tab[9], int espacos_vazios, char player, compare cmp );
 // Essa função ira agir dentro do tabuleiro de acordo com a função minimax
-int IA_minimax_dificil(char tab[9], int espacos_vazios, char player);
+int IA_minimax_dificil(char tab[9], char player, int espacos_vazios);
 
 
 

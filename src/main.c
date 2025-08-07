@@ -85,7 +85,7 @@ void LimparTabuleiro(char tab[9]) {
 int turnoJogadorHumano(char grade[9], char TurnoJogador) {
     char coordenadas[4];
     printf("Turno do jogador %c\n", TurnoJogador);
-    printf("Digite uma coordenada (ex: 2B): ");
+    printf("Digite uma coordenada (ex: A1): ");
 
     if (fgets(coordenadas, sizeof(coordenadas), stdin) == NULL)
         return -1;
